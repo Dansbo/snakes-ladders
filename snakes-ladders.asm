@@ -27,7 +27,7 @@ SCREEN_SET_MODE		= $FF5F
 
 	jsr Load_gameboard
 
-	Translates			;end program
+	rts			;end program
 
 Load_gameboard
 	lda	#0			; Set scree mode to 40x30 (320x240)
