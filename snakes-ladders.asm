@@ -25,7 +25,11 @@ COLPORT			= $0376
 
 SCREEN_SET_MODE		= $FF5F
 
-main:
+	jsr Load_gameboard
+
+	Translates			;end program
+
+Load_gameboard
 	lda	#0			; Set scree mode to 40x30 (320x240)
 	jsr	SCREEN_SET_MODE
 
@@ -68,9 +72,9 @@ main:
 					; 1=use address in bin file
 	jsr	SETLFS
 
-	lda	#(End_fname-Fname)	; Length of filename
-	ldx	#<Fname			; Low byte of Fname address
-	ldy	#>Fname			; High byte of Fname address
+	lda	#(@End_fname-@Fname)	; Length of filename
+	ldx	#<@Fname		; Low byte of Fname address
+	ldy	#>@Fname		; High byte of Fname address
 	jsr	SETNAM
 
 	ldy	#$40			; VERA HIGH/MID address
@@ -78,8 +82,7 @@ main:
 	lda	#$02			; VERA BANK + 2
 	jsr	LOAD
 
-	jmp *
 	rts
 
-Fname	!text	"gameboard.bin"
-End_fname
+@Fname	!text	"gameboard.bin"
+@End_fname
