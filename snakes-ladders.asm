@@ -54,7 +54,7 @@ Load_sprites:
 
 	lda PIC
 	cmp #2			;If PIC=2 then load lightblue sprite
-	bne Green
+	bne @Green
 	lda #(@Lightgreen-@Lightblue)
 	ldx #<@Lightblue
 	ldy #>@Lightblue
@@ -66,9 +66,9 @@ Load_sprites:
 
 	jmp @Load
 
-Green:	cmp #3
-	bne Purple
-	lda #(@Purple-@Lightgreen)
+@Green:	cmp #3
+	bne @Purple
+	lda #(@Purple_file-@Lightgreen)
 	ldx #<@Lightgreen
 	ldy #>@Lightgreen
 	jsr SETNAM
@@ -79,11 +79,11 @@ Green:	cmp #3
 
 	jmp @Load
 
-Purple:	cmp #4
-	bne Yellow
-	lda #(@Yellow-@Purple)
-	ldx #<@Purple
-	ldy #>@Purple
+@Purple:cmp #4
+	bne @Yellow
+	lda #(@Yellow_file-@Purple_file)
+	ldx #<@Purple_file
+	ldy #>@Purple_file
 	jsr SETNAM
 
 	ldy #$CF
@@ -92,11 +92,11 @@ Purple:	cmp #4
 
 	jmp @Load
 
-Yellow:	cmp #5
+@Yellow:cmp #5
 	bne Load_sprites
-	lda #(@End-@Yellow)
-	ldx #<@Yellow
-	ldy #>@Yellow
+	lda #(@End-@Yellow_file)
+	ldx #<@Yellow_file
+	ldy #>@Yellow_file
 	jsr SETNAM
 
 	ldy #$D0
@@ -111,8 +111,8 @@ Yellow:	cmp #5
 
 @Lightblue 	!text "lightblue.bin"
 @Lightgreen 	!text "lightgreen.bin"
-@Purple 	!text "purple.bin"
-@Yellow 	!text "yellow.bin"
+@Purple_file 	!text "purple.bin"
+@Yellow_file 	!text "yellow.bin"
 @End
 ;************************************************************************
 ;A loop waiting for the user to press "spacebar"
