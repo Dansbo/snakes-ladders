@@ -27,14 +27,93 @@ SCREEN_SET_MODE	= $FF5F
 PIC		= $00
 GETIN		= $FFE4
 
-
+!zone main{
 	jsr Reset
 	jsr Load2vram
 	jsr Spacebar
 	inc PIC
 	jsr Load2vram
+	jsr Load_sprites
 
 	rts			;end program
+;************************************************************************
+;Routine to load sprites into VRAM
+;************************************************************************
+;Uses: PIC to choose sprite file
+;************************************************************************
+Load_sprites:
+	inc PIC
+	lda PIC
+	cmp #6			;If PIC is greater than 5 end routine
+	beq @End_routine
+
+	lda #1			;Logical file number
+	ldx #8			;Device number (8=SDcard)
+	ldy #0			;Ignore address in bin file
+	jsr SETLFS
+
+	lda PIC
+	cmp #2			;If PIC=2 then load lightblue sprite
+	bne Green
+	lda #(@Lightgreen-@Lightblue)
+	ldx #<@Lightblue
+	ldy #>@Lightblue
+	jsr SETNAM
+
+	ldy #$CF		;Bitmap is 4 bpp 320x230 36800 bytes = $8FC0
+	ldx #$C0		;Start should be $4000+$8FC0 = $CFC0
+	lda #$02		;Bank 2
+
+	jmp @Load
+
+Green:	cmp #3
+	bne Purple
+	lda #(@Purple-@Lightgreen)
+	ldx #<@Lightgreen
+	ldy #>@Lightgreen
+	jsr SETNAM
+
+	ldy #$CF		;Sprite is 4 bpp 8x8 = 32 bytes = $20
+	ldx #$E0		;Start should be $CFC0+$20 = $CFE0
+	lda #$02
+
+	jmp @Load
+
+Purple:	cmp #4
+	bne Yellow
+	lda #(@Yellow-@Purple)
+	ldx #<@Purple
+	ldy #>@Purple
+	jsr SETNAM
+
+	ldy #$CF
+	ldx #$F0
+	lda #$02
+
+	jmp @Load
+
+Yellow:	cmp #5
+	bne Load_sprites
+	lda #(@End-@Yellow)
+	ldx #<@Yellow
+	ldy #>@Yellow
+	jsr SETNAM
+
+	ldy #$D0
+	ldx #$00
+	lda #$02
+
+@Load	jsr LOAD
+	jmp Load_sprites
+
+@End_routine
+	rts
+
+@Lightblue 	!text "lightblue.bin"
+@Lightgreen 	!text "lightgreen.bin"
+@Purple 	!text "purple.bin"
+@Yellow 	!text "yellow.bin"
+@End
 ;************************************************************************
 ;A loop waiting for the user to press "spacebar"
 ;************************************************************************
@@ -123,3 +202,4 @@ Load2vram:
 ;Global variables
 ;************************************************************************
 Rndnum !byte 0
+}
