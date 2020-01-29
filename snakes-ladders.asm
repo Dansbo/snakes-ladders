@@ -35,13 +35,17 @@ GETIN		= $FFE4
 	jsr Load2vram
 
 	rts			;end program
-
+;************************************************************************
+;A loop waiting for the user to press "spacebar"
+;************************************************************************
 Spacebar:
 	inc Rndnum
 	jsr GETIN
 	cmp #' '
 	bne Spacebar
-
+;************************************************************************
+;Reset variables used throughout the game
+;************************************************************************
 Reset:
 	lda #0
 	sta PIC
