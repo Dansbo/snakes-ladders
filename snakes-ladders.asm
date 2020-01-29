@@ -62,9 +62,9 @@ Load2vram:
 	sta VERA_CTRL
 
 	; Setup Layer0 for bitmap data
-	lda #$1F			; Inc=1, Bank=F
+	lda #$1F		; Inc=1, Bank=F
 	sta VERA_ADDR_BANK
-	lda #$20			; Addr=2000 = Layer 0 register
+	lda #$20		; Addr=2000 = Layer 0 register
 	sta VERA_ADDR_HIGH
 	lda #$00
 	sta VERA_ADDR_LOW
@@ -99,14 +99,14 @@ Load2vram:
 	jmp @Vera
 
 
-+	lda #(@End_fname-@Fname)	; Length of filename
-	ldx #<@Fname			; Low byte of Fname address
-	ldy #>@Fname			; High byte of Fname address
++	lda #(@End_fname-@Fname); Length of filename
+	ldx #<@Fname		; Low byte of Fname address
+	ldy #>@Fname		; High byte of Fname address
 @Vera	jsr SETNAM
 
-	ldy #$40			; VERA HIGH/MID address
-	ldx #$00			; VERA LOW address
-	lda #$02			; VERA BANK + 2
+	ldy #$40		; VERA HIGH/MID address
+	ldx #$00		; VERA LOW address
+	lda #$02		; VERA BANK + 2
 	jsr LOAD
 
 	rts
