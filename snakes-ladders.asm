@@ -85,8 +85,8 @@ Load2vram:
 
 	lda PIC			;Check PIC value to find correct picture
 	bne +
-	lda #(@End_fname-@Loading)
-	ldx  #<@Loading
+	lda #(@Fname-@Loading)
+	ldx #<@Loading
 	ldy #>@Loading
 	jmp @Vera
 
