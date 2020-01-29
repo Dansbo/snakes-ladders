@@ -25,14 +25,22 @@ COLPORT		= $0376
 
 SCREEN_SET_MODE	= $FF5F
 PIC		= $00
+GETIN		= $FFE4
 
 
 	jsr Reset
 	jsr Load2vram
-	;inc PIC
+	jsr Spacebar
+	inc PIC
 	jsr Load2vram
 
 	rts			;end program
+
+Spacebar:
+	inc Rndnum
+	jsr GETIN
+	cmp #' '
+	bne Spacebar
 
 Reset:
 	lda #0
@@ -106,3 +114,8 @@ Load2vram:
 @Loading !text	"loading.bin"
 @Fname	!text	"gameboard.bin"
 @End_fname
+
+;************************************************************************
+;Global variables
+;************************************************************************
+Rndnum !byte 0
