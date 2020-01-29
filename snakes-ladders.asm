@@ -86,8 +86,8 @@ Load_sprites:
 	ldy #>@Purple_file
 	jsr SETNAM
 
-	ldy #$CF
-	ldx #$F0
+	ldy #$D0
+	ldx #$00
 	lda #$02
 
 	jmp @Load
@@ -100,7 +100,7 @@ Load_sprites:
 	jsr SETNAM
 
 	ldy #$D0
-	ldx #$00
+	ldx #$20
 	lda #$02
 
 @Load	jsr LOAD
