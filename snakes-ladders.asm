@@ -60,8 +60,8 @@ Load_sprites:
 	ldy #>@Lightblue
 	jsr SETNAM
 
-	ldy #$CF		;Bitmap is 4 bpp 320x230 36800 bytes = $8FC0
-	ldx #$C0		;Start should be $4000+$8FC0 = $CFC0
+	ldy #$D6		;Bitmap is 4 bpp 320x240 38400 bytes = $9600
+	ldx #$00		;Start should be $4000+$9600 = $D600
 	lda #$02		;Bank 2
 
 	jmp @Load
@@ -73,8 +73,8 @@ Load_sprites:
 	ldy #>@Lightgreen
 	jsr SETNAM
 
-	ldy #$CF		;Sprite is 4 bpp 8x8 = 32 bytes = $20
-	ldx #$E0		;Start should be $CFC0+$20 = $CFE0
+	ldy #$D6		;Sprite is 4 bpp 8x8 = 32 bytes = $20
+	ldx #$20		;Start should be $D600+$20 = $D620
 	lda #$02
 
 	jmp @Load
@@ -86,8 +86,8 @@ Load_sprites:
 	ldy #>@Purple_file
 	jsr SETNAM
 
-	ldy #$D0
-	ldx #$00
+	ldy #$D6
+	ldx #$40
 	lda #$02
 
 	jmp @Load
@@ -99,8 +99,8 @@ Load_sprites:
 	ldy #>@Yellow_file
 	jsr SETNAM
 
-	ldy #$D0
-	ldx #$20
+	ldy #$D6
+	ldx #$60
 	lda #$02
 
 @Load	jsr LOAD
@@ -155,7 +155,7 @@ Load2vram:
 	lda #%11000001		; Mode=6; Enabled=1
 	sta VERA_DATA0
 	lda #0
-	sta VERA_DATA0		; TILEW=0 = 320x230 mode
+	sta VERA_DATA0		; TILEW=0 = 320x240 mode
 	sta VERA_DATA0		; MAP_BASE, not used in bitmap mode
 	sta VERA_DATA0		; MAP_BASE, not used in bitmap mode
 	sta VERA_DATA0		; TILE_BASE low byte = $00
