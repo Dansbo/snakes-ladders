@@ -44,7 +44,7 @@ GETIN		= $FFE4
 Load_sprites:
 	inc PIC
 	lda PIC
-	cmp #6			;If PIC is greater than 5 end routine
+	cmp #7			;If PIC is greater than 6 end routine
 	beq @End_routine
 
 	lda #1			;Logical file number
@@ -93,14 +93,27 @@ Load_sprites:
 	jmp @Load
 
 @Yellow:cmp #5
-	bne Load_sprites
-	lda #(@End-@Yellow_file)
+	bne @Dice
+	lda #(@Dice-@Yellow_file)
 	ldx #<@Yellow_file
 	ldy #>@Yellow_file
 	jsr SETNAM
 
 	ldy #$D6
 	ldx #$60
+	lda #$02
+
+	jmp @Load
+
+@Dice:	cmp #6
+	bne Load_sprites
+	lda #(@End-@Dice_file)
+	ldx #<@Dice_file
+	ldy #>@Dice_file
+	jsr SETNAM
+
+	ldy #$D6
+	ldx #$80
 	lda #$02
 
 @Load	jsr LOAD
@@ -113,6 +126,7 @@ Load_sprites:
 @Lightgreen 	!text "lightgreen.bin"
 @Purple_file 	!text "purple.bin"
 @Yellow_file 	!text "yellow.bin"
+@Dice_file	!text "dice.bin"
 @End
 ;************************************************************************
 ;A loop waiting for the user to press "spacebar"
