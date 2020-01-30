@@ -42,17 +42,16 @@ TMP2		= $02
 	rts			;end program
 
 Players:
-!byte $FF
 	ldx #31
 	ldy #1
 	jsr Go_XY
 
-	ldx #<@Choose
-	ldy #>@Choose
+	ldx #<.Choose
+	ldy #>.Choose
 	jsr Print_Str
 	rts
 
-@Choose !PET "choose",0
+.Choose !pet "choose",0
 ;************************************************************************
 ;Print string function
 ;************************************************************************
