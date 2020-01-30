@@ -24,18 +24,45 @@ LOAD		= $FFD5
 COLPORT		= $0376
 
 SCREEN_SET_MODE	= $FF5F
+PLOT		= $FFF0
 PIC		= $00
 GETIN		= $FFE4
 
-!zone main{
 	jsr Reset
 	jsr Load2vram
 	jsr Spacebar
 	inc PIC
 	jsr Load2vram
 	jsr Load_sprites
+	jsr Enable_sprites
+	jsr Players
 
 	rts			;end program
+
+Players:
+
+;************************************************************************
+;Move text cursor
+;************************************************************************
+Go_XY:
+	clc
+	jsr PLOT
+	rts
+
+;************************************************************************
+;Enable all sprites
+;************************************************************************
+Enable_sprites:
+	lda #0			;Enabling sprites at register $F4000
+	sta VERA_ADDR_LOW
+	lda #$40
+	sta VERA_ADDR_HIGH
+	lda #$0F
+	sta VERA_ADDR_BANK
+	lda #1			;1 to enable all sprites
+	sta VERA_DATA0
+	rts
+
 ;************************************************************************
 ;Routine to load sprites into VRAM
 ;************************************************************************
@@ -216,4 +243,3 @@ Load2vram:
 ;Global variables
 ;************************************************************************
 Rndnum !byte 0
-}
