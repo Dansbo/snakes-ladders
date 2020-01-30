@@ -27,6 +27,8 @@ SCREEN_SET_MODE	= $FF5F
 PLOT		= $FFF0
 PIC		= $00
 GETIN		= $FFE4
+TMP1		= $01
+TMP2		= $02
 
 	jsr Reset
 	jsr Load2vram
@@ -40,6 +42,34 @@ GETIN		= $FFE4
 	rts			;end program
 
 Players:
+!byte $FF
+	ldx #31
+	ldy #1
+	jsr Go_XY
+
+	ldx #<@Choose
+	ldy #>@Choose
+	jsr Print_Str
+	rts
+
+@Choose !PET "choose",0
+;************************************************************************
+;Print string function
+;************************************************************************
+Print_Str:
+	stx TMP1
+	sty TMP2
+	ldy #0
+
+@Doprint
+	lda (TMP1), Y
+	beq @Printdone
+	jsr CHROUT
+	iny
+	jmp @Doprint
+
+@Printdone
+	rts
 
 ;************************************************************************
 ;Move text cursor
