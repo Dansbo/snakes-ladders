@@ -46,12 +46,12 @@ Players:
 	ldy #1
 	jsr Go_XY
 
-	ldx #<.Choose
-	ldy #>.Choose
+	ldx #<@Choose
+	ldy #>@Choose
 	jsr Print_Str
 	rts
 
-.Choose !pet "choose",0
+@Choose !pet "choose",0
 ;************************************************************************
 ;Print string function
 ;************************************************************************
