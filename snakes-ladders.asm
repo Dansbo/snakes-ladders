@@ -42,8 +42,8 @@ TMP2		= $02
 	rts			;end program
 
 Players:
-	ldx #1
-	ldy #31
+	ldx #31
+	ldy #1
 	jsr Go_XY
 
 	ldx #<@Choose
@@ -74,6 +74,11 @@ Print_Str:
 ;Move text cursor
 ;************************************************************************
 Go_XY:
+	stx TMP1
+	sty TMP2
+	ldx TMP2
+	ldy TMP1
+
 	clc
 	jsr PLOT
 	rts
