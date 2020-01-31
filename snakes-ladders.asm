@@ -41,7 +41,7 @@ TMP2		= $02
 
 	rts			;end program
 ;************************************************************************
-;Presenting choice of players at right side of SCREEN_SET_MODE
+;Presenting choice of players at right side of screen
 ;************************************************************************
 Players:
 	ldx #31
