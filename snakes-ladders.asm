@@ -40,7 +40,9 @@ TMP2		= $02
 	jsr Players
 
 	rts			;end program
-
+;************************************************************************
+;Presenting choice of players at right side of SCREEN_SET_MODE
+;************************************************************************
 Players:
 	ldx #31
 	ldy #1
@@ -49,9 +51,36 @@ Players:
 	ldx #<@Choose
 	ldy #>@Choose
 	jsr Print_Str
+
+	ldx #31
+	ldy #2
+	jsr Go_XY
+
+	ldx #<@Number
+	ldy #>@Number
+	jsr Print_Str
+
+	ldx #31
+	ldy #3
+	jsr Go_XY
+
+	ldx #<@Player
+	ldy #>@Player
+	jsr Print_Str
+
+	ldx #31
+	ldy #4
+	jsr Go_XY
+
+	ldx #<@Pick
+	ldy #>@Pick
+	jsr Print_Str
 	rts
 
 @Choose !pet "choose",0
+@Number !pet "number of",0
+@Player !pet "players",0
+@Pick   !pet "1-4:",0
 ;************************************************************************
 ;Print string function
 ;************************************************************************
@@ -74,9 +103,9 @@ Print_Str:
 ;Move text cursor
 ;************************************************************************
 Go_XY:
-	stx TMP1
-	sty TMP2
-	ldx TMP2
+	stx TMP1		;Switching X and Y around so X is
+	sty TMP2		;Horizontal position and Y is
+	ldx TMP2		;Vertical as we know from graphing
 	ldy TMP1
 
 	clc
