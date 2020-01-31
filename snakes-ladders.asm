@@ -29,6 +29,7 @@ PIC		= $00
 GETIN		= $FFE4
 TMP1		= $01
 TMP2		= $02
+PLAYERS		= $03
 
 	jsr Reset
 	jsr Load2vram
@@ -38,8 +39,36 @@ TMP2		= $02
 	jsr Load_sprites
 	jsr Enable_sprites
 	jsr Players
+	jsr Player_choice
 
 	rts			;end program
+
+Player_choice:
+	inc Rndnum
+	jsr GETIN
+	cmp #'1'
+	bne @Is_2
+	inc PLAYERS
+	jmp @End
+
+@Is_2	cmp #'2'
+	bne @Is_3
+	lda #2
+	sta PLAYERS
+	jmp @End
+
+@Is_3	cmp #'3'
+	bne @Is_4
+	lda #3
+	sta PLAYERS
+	jmp @End
+
+@Is_4	cmp #'4'
+	bne Player_choice
+	lda #4
+	sta PLAYERS
+
+@End	rts
 ;************************************************************************
 ;Presenting choice of players at right side of screen
 ;************************************************************************
@@ -232,6 +261,7 @@ Spacebar:
 Reset:
 	lda #0
 	sta PIC
+	sta PLAYERS
 
 	rts
 
