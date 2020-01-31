@@ -42,8 +42,8 @@ TMP2		= $02
 	rts			;end program
 
 Players:
-	ldx #31
-	ldy #1
+	ldx #1
+	ldy #31
 	jsr Go_XY
 
 	ldx #<@Choose
