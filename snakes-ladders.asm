@@ -47,7 +47,6 @@ CURRENT_PLYER	= $04
 	rts			;end program
 
 Throw_dice:
-
 	ldx #31
 	ldy #1
 	jsr Go_XY
@@ -55,7 +54,7 @@ Throw_dice:
 	lda CURRENT_PLYER
 	bne @Plyer_2
 	lda #$30
-	jsr COLPORT
+	sta COLPORT
 	ldx #<@P1
 	ldy #>@P1
 	jsr Print_Str
@@ -65,7 +64,7 @@ Throw_dice:
 	cmp #1
 	bne @Plyer_3
 	lda #$E0
-	jsr COLPORT
+	sta COLPORT
 	ldx #<@P2
 	ldy #>@P2
 	jsr Print_Str
@@ -75,7 +74,7 @@ Throw_dice:
 	cmp #2
 	bne @Plyer_4
 	lda #$50
-	jsr COLPORT
+	sta COLPORT
 	ldx #<@P3
 	ldy #>@P3
 	jsr Print_Str
@@ -83,7 +82,7 @@ Throw_dice:
 
 @Plyer_4
 	lda #$70
-	jsr COLPORT
+	sta COLPORT
 	ldx #<@P4
 	ldy #>@P4
 	jsr Print_Str
@@ -91,7 +90,7 @@ Throw_dice:
 @Throw
 	inc CURRENT_PLYER
 	lda #$01
-	jsr COLPORT
+	sta COLPORT
 
 	ldx #31
 	ldy #2
