@@ -56,8 +56,6 @@ Throw_dice:
 	bne @Plyer_2
 	lda #$30
 	jsr COLPORT
-	lda #147
-	jsr CHROUT
 	ldx #<@P1
 	ldy #>@P1
 	jsr Print_Str
@@ -79,7 +77,7 @@ Throw_dice:
 	lda #$50
 	jsr COLPORT
 	ldx #<@P3
-	ldy #>@P4
+	ldy #>@P3
 	jsr Print_Str
 	jmp @Throw
 
