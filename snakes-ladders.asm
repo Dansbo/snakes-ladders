@@ -30,6 +30,7 @@ GETIN		= $FFE4
 TMP1		= $01
 TMP2		= $02
 PLAYERS		= $03
+CURRENT_PLYER	= $04
 
 	jsr Reset
 	jsr Load2vram
@@ -40,9 +41,96 @@ PLAYERS		= $03
 	jsr Enable_sprites
 	jsr Players
 	jsr Player_choice
+	jsr Throw_dice
+	;jsr Play_dice
 
 	rts			;end program
 
+Throw_dice:
+
+	ldx #31
+	ldy #1
+	jsr Go_XY
+
+	lda CURRENT_PLYER
+	bne @Plyer_2
+	lda #$30
+	jsr COLPORT
+	lda #147
+	jsr CHROUT
+	ldx #<@P1
+	ldy #>@P1
+	jsr Print_Str
+	jmp @Throw
+
+@Plyer_2:
+	cmp #1
+	bne @Plyer_3
+	lda #$E0
+	jsr COLPORT
+	ldx #<@P2
+	ldy #>@P2
+	jsr Print_Str
+	jmp @Throw
+
+@Plyer_3
+	cmp #2
+	bne @Plyer_4
+	lda #$50
+	jsr COLPORT
+	ldx #<@P3
+	ldy #>@P4
+	jsr Print_Str
+	jmp @Throw
+
+@Plyer_4
+	lda #$70
+	jsr COLPORT
+	ldx #<@P4
+	ldy #>@P4
+	jsr Print_Str
+
+@Throw
+	inc CURRENT_PLYER
+	lda #$01
+	jsr COLPORT
+
+	ldx #31
+	ldy #2
+	jsr Go_XY
+
+	ldx #<@Press
+	ldy #>@Press
+	jsr Print_Str
+
+	ldx #31
+	ldy #3
+	jsr Go_XY
+
+	ldx #<@To
+	ldy #>@To
+	jsr Print_Str
+
+	ldx #31
+	ldy #4
+	jsr Go_XY
+
+	ldx #<@Dice
+	ldy #>@Dice
+	jsr Print_Str
+
+	rts
+
+@P1	!pet "player 1",0
+@P2	!pet "player 2",0
+@P3	!pet "player 3",0
+@P4	!pet "player 4",0
+@Press	!pet "hit space",0
+@To	!pet "to throw",0
+@Dice	!pet "dice",0
+;************************************************************************
+;Routine so user can choose number of players
+;************************************************************************
 Player_choice:
 	inc Rndnum
 	jsr GETIN
