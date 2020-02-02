@@ -68,7 +68,7 @@ Stop_dice:
 	sta VERA_DATA0
 	lda #0			;bit 9-8 of x position
 	sta VERA_DATA0
-	lda #%11111111		;Y position
+	lda #%11011100		;Y position (220)
 	sta VERA_DATA0
 	lda #0			;Bit 9-8 of Y position
 	sta VERA_DATA0
