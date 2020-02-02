@@ -60,21 +60,21 @@ Stop_dice:
 	lda #$1f
 	sta VERA_ADDR_HIGH
 
-	lda #$B4
+	lda #$B4		;Dice starts a location
+	sta VERA_DATA0		;$D680 which converts to
+	lda #$06		;$06 $B4
 	sta VERA_DATA0
-	lda #$06
+	lda #%11111111		;X position
 	sta VERA_DATA0
-	lda #%11111111
+	lda #0			;bit 9-8 of x position
 	sta VERA_DATA0
-	lda #0
+	lda #%11111111		;Y position
 	sta VERA_DATA0
-	lda #%11111111
+	lda #0			;Bit 9-8 of Y position
 	sta VERA_DATA0
-	lda #0
+	lda #%00001100		;No collision; Z=3 on top of txt; no flip
 	sta VERA_DATA0
-	lda #%00001100
-	sta VERA_DATA0
-	lda #%10100000
+	lda #%10100000		;Sprite 32x32
 	sta VERA_DATA0
 
 	jmp Stop_dice
