@@ -42,10 +42,47 @@ CURRENT_PLYER	= $04
 	jsr Players
 	jsr Player_choice
 	jsr Throw_dice
-	;jsr Play_dice
+	jsr Stop_dice
 
 	rts			;end program
 
+Stop_dice:
+	inc Rndnum
+	jsr GETIN
+
+	cmp #' '
+	beq @End
+
+	lda #$08
+	sta VERA_ADDR_LOW
+	lda #$50
+	sta VERA_ADDR_HIGH
+	lda #$1f
+	sta VERA_ADDR_HIGH
+
+	lda #$06
+	sta VERA_DATA0
+	lda #$B4
+	sta VERA_DATA0
+	lda #%11111111
+	sta VERA_DATA0
+	lda #0
+	sta VERA_DATA0
+	lda #%11111111
+	sta VERA_DATA0
+	lda #0
+	sta VERA_DATA0
+	lda #%00001100
+	sta VERA_DATA0
+	lda #%10100000
+	sta VERA_DATA0
+
+	jmp Stop_dice
+
+@End	rts
+;************************************************************************
+;Presenting players with text to press space to stop dice from rolling
+;************************************************************************
 Throw_dice:
 	ldx #31
 	ldy #1
@@ -123,7 +160,7 @@ Throw_dice:
 @P3	!pet "player 3",0
 @P4	!pet "player 4",0
 @Press	!pet "hit space",0
-@To	!pet "to throw",0
+@To	!pet "to stop",0
 @Dice	!pet "dice",0
 ;************************************************************************
 ;Routine so user can choose number of players
