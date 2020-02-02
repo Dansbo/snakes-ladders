@@ -60,9 +60,9 @@ Stop_dice:
 	lda #$1f
 	sta VERA_ADDR_HIGH
 
-	lda #$06
-	sta VERA_DATA0
 	lda #$B4
+	sta VERA_DATA0
+	lda #$06
 	sta VERA_DATA0
 	lda #%11111111
 	sta VERA_DATA0
