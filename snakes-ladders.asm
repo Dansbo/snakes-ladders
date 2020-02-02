@@ -74,7 +74,7 @@ Stop_dice:
 	sta VERA_DATA0
 	lda #%00001100		;No collision; Z=3 on top of txt; no flip
 	sta VERA_DATA0
-	lda #%10100000		;Sprite 32x32
+	lda #%10100000		;Sprite 32x32; No PALETTE_OFFSET
 	sta VERA_DATA0
 
 	jmp Stop_dice
