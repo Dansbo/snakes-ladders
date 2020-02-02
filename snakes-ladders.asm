@@ -64,11 +64,11 @@ Stop_dice:
 	sta VERA_DATA0		;$D680 which converts to
 	lda #$06		;$06 $B4
 	sta VERA_DATA0
-	lda #%11111111		;X position
+	lda #200		;X position
 	sta VERA_DATA0
 	lda #0			;bit 9-8 of x position
 	sta VERA_DATA0
-	lda #%11011100		;Y position (220)
+	lda #200		;Y position (220)
 	sta VERA_DATA0
 	lda #0			;Bit 9-8 of Y position
 	sta VERA_DATA0
