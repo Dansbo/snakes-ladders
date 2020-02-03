@@ -22,6 +22,8 @@ SETNAM		= $FFBD
 LOAD		= $FFD5
 
 COLPORT		= $0376
+SETTIM		= $FFDB
+RDTIM		= $FFDE
 
 SCREEN_SET_MODE	= $FF5F
 PLOT		= $FFF0
@@ -31,6 +33,7 @@ TMP1		= $01
 TMP2		= $02
 PLAYERS		= $03
 CURRENT_PLYER	= $04
+DICE		= $05
 
 	jsr Reset
 	jsr Load2vram
@@ -42,33 +45,199 @@ CURRENT_PLYER	= $04
 	jsr Players
 	jsr Player_choice
 	jsr Throw_dice
-	jsr Stop_dice
+	jsr Show_pieces
+	jsr Gameloop
 
 	rts			;end program
 
-Stop_dice:
+Show_pieces:
+	lda #$50		;Enabling lightblue piece
+	sta VERA_ADDR_HIGH
+	lda #$10
+	sta VERA_ADDR_LOW
+	lda #$1F
+	sta VERA_ADDR_BANK
+	lda Pcs_addr_0
+	sta VERA_DATA0
+	lda Pcs_addr_0+1
+	sta VERA_DATA0
+	lda #250
+	sta VERA_DATA0
+	lda #0
+	sta VERA_DATA0
+	lda #225
+	sta VERA_DATA0
+	lda #0
+	sta VERA_DATA0
+	lda #%00001100		;No collision; On layer1; No flip
+	sta VERA_DATA0
+	lda #%00000000		;8x8 pixels and no PALETTE_OFFSET
+	sta VERA_DATA0
+
+	lda Pcs_addr_1		;Enabling Green piece
+	sta VERA_DATA0
+	lda Pcs_addr_1+1
+	sta VERA_DATA0
+	lda #5
+	sta VERA_DATA0
+	lda #1
+	sta VERA_DATA0
+	lda #225
+	sta VERA_DATA0
+	lda #0
+	sta VERA_DATA0
+	lda #%00001100
+	sta VERA_DATA0
+	lda #%00000000
+	sta VERA_DATA0
+
+	lda Pcs_addr_2		;Enabling Purple piece
+	sta VERA_DATA0
+	lda Pcs_addr_2+1
+	sta VERA_DATA0
+	lda #16
+	sta VERA_DATA0
+	lda #1
+	sta VERA_DATA0
+	lda #225
+	sta VERA_DATA0
+	lda #0
+	sta VERA_DATA0
+	lda #%00001100
+	sta VERA_DATA0
+	lda #0
+	sta VERA_DATA0
+
+	lda Pcs_addr_3		;Enabling Yellow piece
+	sta VERA_DATA0
+	lda Pcs_addr_3+1
+	sta VERA_DATA0
+	lda #27
+	sta VERA_DATA0
+	lda #1
+	sta VERA_DATA0
+	lda #225
+	sta VERA_DATA0
+	lda #0
+	sta VERA_DATA0
+	lda #%00001100
+	sta VERA_DATA0
+	lda #0
+	sta VERA_DATA0
+
+	rts
+
+
+
+;************************************************************************
+;Delay function
+;************************************************************************
+Delay	lda #0
+	jsr SETTIM		;Set clocktime to 0
+
+@Delay	jsr RDTIM		;Read clocktime
+	cmp TMP1		;Has predefined jiffies been reached?
+	bne @Delay		;If not read again
+	rts
+
+;************************************************************************
+;Gameloop waits for player to press space while spinning dice
+;************************************************************************
+Gameloop:
 	inc Rndnum
 	jsr GETIN
 
 	cmp #' '
-	beq @End
+	bne +
+	jmp @End
+
++	lda #8			;Delay for half a second
+	sta TMP1
+	jsr Delay
 
 	lda #$08
 	sta VERA_ADDR_LOW
 	lda #$50
 	sta VERA_ADDR_HIGH
 	lda #$1f
-	sta VERA_ADDR_HIGH
+	sta VERA_ADDR_BANK
 
-	lda #$B4		;Dice starts a location
-	sta VERA_DATA0		;$D680 which converts to
-	lda #$06		;$06 $B4
+	lda DICE
+	bne @Dice2
+@D0	lda @Dice_addr_0
 	sta VERA_DATA0
-	lda #200		;X position
+	lda @Dice_addr_0+1
+	jmp @Show
+
+@Dice2	cmp #1
+	bne @Dice3
+	lda @Dice_addr_2
 	sta VERA_DATA0
-	lda #0			;bit 9-8 of x position
+	lda @Dice_addr_2+1
+	jmp @Show
+
+@Dice3	cmp #2
+	bne @Dice4
+@D1	lda @Dice_addr_1
 	sta VERA_DATA0
-	lda #200		;Y position (220)
+	lda @Dice_addr_1+1
+	jmp @Show
+
+@Dice4	cmp #3
+	bne @Dice5
+	lda @Dice_addr_3
+	sta VERA_DATA0
+	lda @Dice_addr_3+1
+	jmp @Show
+
+@Dice5	cmp #4
+	bne @Dice6
+	jmp @D0
+
+@Dice6	cmp #5
+	bne @Dice7
+	lda @Dice_addr_4
+	sta VERA_DATA0
+	lda @Dice_addr_4+1
+	jmp @Show
+
+@Dice7	cmp #6
+	bne @Dice8
+	jmp @D1
+
+@Dice8	cmp #7
+	bne @Dice9
+	lda @Dice_addr_5
+	sta VERA_DATA0
+	lda @Dice_addr_5+1
+	jmp @Show
+
+@Dice9	cmp #8
+	bne @Dice10
+	jmp @D0
+
+@Dice10	cmp #9
+	bne @Dice11
+	lda @Dice_addr_6
+	sta VERA_DATA0
+	lda @Dice_addr_6+1
+	jmp @Show
+
+@Dice11	cmp #10
+	bne @Dice12
+	jmp @D1
+
+@Dice12	lda @Dice_addr_7
+	sta VERA_DATA0
+	lda @Dice_addr_7+1
+
+@Show	inc DICE
+	sta VERA_DATA0
+	lda #10			;X position
+	sta VERA_DATA0		;X position 265
+	lda #1			;bit 9-8 of x position
+	sta VERA_DATA0
+	lda #100		;Y position
 	sta VERA_DATA0
 	lda #0			;Bit 9-8 of Y position
 	sta VERA_DATA0
@@ -76,10 +245,23 @@ Stop_dice:
 	sta VERA_DATA0
 	lda #%10100000		;Sprite 32x32; No PALETTE_OFFSET
 	sta VERA_DATA0
+	lda DICE
+	cmp #11
+	bne +
+	lda #0
+	sta DICE
 
-	jmp Stop_dice
++	jmp Gameloop
 
 @End	rts
+@Dice_addr_0	!byte $B4, $06
+@Dice_addr_1	!byte $C4, $06
+@Dice_addr_2	!byte $D4, $06
+@Dice_addr_3	!byte $E4, $06
+@Dice_addr_4	!byte $F4, $06
+@Dice_addr_5	!byte $04, $07
+@Dice_addr_6	!byte $14, $07
+@Dice_addr_7	!byte $24, $07
 ;************************************************************************
 ;Presenting players with text to press space to stop dice from rolling
 ;************************************************************************
@@ -335,7 +517,7 @@ Load_sprites:
 
 @Yellow:cmp #5
 	bne @Dice
-	lda #(@Dice-@Yellow_file)
+	lda #(@Dice_file-@Yellow_file)
 	ldx #<@Yellow_file
 	ldy #>@Yellow_file
 	jsr SETNAM
@@ -458,3 +640,7 @@ Load2vram:
 ;Global variables
 ;************************************************************************
 Rndnum !byte 0
+Pcs_addr_0 !byte $B0, $06
+Pcs_addr_1 !byte $B1, $06
+Pcs_addr_2 !byte $B2, $06
+Pcs_addr_3 !byte $B3, $06
