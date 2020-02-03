@@ -91,8 +91,8 @@ Show_pieces:
 	lda #%00000000
 	sta VERA_DATA0
 	lda PLAYERS
-	cmp #3
-	bcs +
+	cmp #3			;Show next piece if PLAYERS is greater than
+	bcs +			;or equal to 3
 	jmp @End
 
 +	lda Pcs_addr_2		;Enabling Purple piece
@@ -112,8 +112,8 @@ Show_pieces:
 	lda #0
 	sta VERA_DATA0
 	lda PLAYERS
-	cmp #4
-	bcs +
+	cmp #4			;Show next piece if PLAYERS is greater than
+	bcs +			;or equal to 4
 	jmp @End
 
 +	lda Pcs_addr_3		;Enabling Yellow piece
@@ -159,7 +159,7 @@ Gameloop:
 	bne +
 	jmp @End
 
-+	lda #8			;Delay for half a second
++	lda #8			;Delay for 8 jiffies
 	sta TMP1
 	jsr Delay
 
