@@ -157,7 +157,7 @@ Gameloop:
 
 	cmp #' '
 	bne +
-	jmp @End
+	jmp @Pick
 
 +	lda #8			;Delay for 8 jiffies
 	sta TMP1
@@ -260,6 +260,65 @@ Gameloop:
 	sta DICE
 
 +	jmp Gameloop
+
+@Pick	inc Rndnum
+	lda Rndnum
+	and #$0F
+	cmp #7
+	bcs @Pick
+	lda #$08
+	sta VERA_ADDR_LOW
+	lda #$50
+	sta VERA_ADDR_HIGH
+	lda #$1F
+	sta VERA_ADDR_BANK
+	lda Rndnum
+	and #$0F
+	cmp #1
+	bne @Is_2
+	lda @Dice_addr_2
+	sta VERA_DATA0
+	lda @Dice_addr_2+1
+	sta VERA_DATA0
+	jmp @End
+
+@Is_2	cmp #2
+	bne @Is_3
+	lda @Dice_addr_3
+	sta VERA_DATA0
+	lda @Dice_addr_3+1
+	sta VERA_DATA0
+	jmp @End
+
+@Is_3	cmp #3
+	bne @Is_4
+	lda @Dice_addr_4
+	sta VERA_DATA0
+	lda @Dice_addr_4+1
+	sta VERA_DATA0
+	jmp @End
+
+@Is_4	cmp #4
+	bne @Is_5
+	lda @Dice_addr_5
+	sta VERA_DATA0
+	lda @Dice_addr_5+1
+	sta VERA_DATA0
+	jmp @End
+
+@Is_5	cmp #5
+	bne @Is_6
+	lda @Dice_addr_6
+	sta VERA_DATA0
+	lda @Dice_addr_6+1
+	sta VERA_DATA0
+	jmp @End
+
+@Is_6	lda @Dice_addr_7
+	sta VERA_DATA0
+	lda @Dice_addr_7+1
+	sta VERA_DATA0
+
 
 @End	rts
 @Dice_addr_0	!byte $B4, $06
