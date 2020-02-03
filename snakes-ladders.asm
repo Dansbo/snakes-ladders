@@ -374,7 +374,6 @@ Throw_dice:
 	jsr Print_Str
 
 @Throw
-	inc CURRENT_PLYER
 	lda #$01
 	sta COLPORT
 
@@ -633,6 +632,18 @@ Reset:
 	lda #0
 	sta PIC
 	sta PLAYERS
+	sta CURRENT_PLYER
+	ldx #$0E
+	stx VERA_ADDR_LOW
+	ldx #$50
+	stx VERA_ADDR_HIGH
+	ldx #$4F
+	stx VERA_ADDR_BANK
+	sta VERA_DATA0
+	sta VERA_DATA0
+	sta VERA_DATA0
+	sta VERA_DATA0
+	sta VERA_DATA0
 
 	rts
 
