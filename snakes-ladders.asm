@@ -71,14 +71,14 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #%00001100		;No collision; On layer1; No flip
 	sta VERA_DATA0
-	lda #%00000000		;8x8 pixels and no PALETTE_OFFSET
+	lda #%01010000		;16x16 pixels and no PALETTE_OFFSET
 	sta VERA_DATA0
 
 	lda Pcs_addr_1		;Enabling Green piece
 	sta VERA_DATA0
 	lda Pcs_addr_1+1
 	sta VERA_DATA0
-	lda #5
+	lda #10
 	sta VERA_DATA0
 	lda #1
 	sta VERA_DATA0
@@ -88,7 +88,7 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #%00001100
 	sta VERA_DATA0
-	lda #%00000000
+	lda #%01010000
 	sta VERA_DATA0
 	lda PLAYERS
 	cmp #3			;Show next piece if PLAYERS is greater than
@@ -99,7 +99,7 @@ Show_pieces:
 	sta VERA_DATA0
 	lda Pcs_addr_2+1
 	sta VERA_DATA0
-	lda #16
+	lda #26
 	sta VERA_DATA0
 	lda #1
 	sta VERA_DATA0
@@ -109,7 +109,7 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #%00001100
 	sta VERA_DATA0
-	lda #0
+	lda #%01010000
 	sta VERA_DATA0
 	lda PLAYERS
 	cmp #4			;Show next piece if PLAYERS is greater than
@@ -120,7 +120,7 @@ Show_pieces:
 	sta VERA_DATA0
 	lda Pcs_addr_3+1
 	sta VERA_DATA0
-	lda #27
+	lda #43
 	sta VERA_DATA0
 	lda #1
 	sta VERA_DATA0
@@ -130,7 +130,7 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #%00001100
 	sta VERA_DATA0
-	lda #0
+	lda #%01010000
 	sta VERA_DATA0
 
 @End:	rts
@@ -321,14 +321,14 @@ Gameloop:
 
 
 @End	rts
-@Dice_addr_0	!byte $B4, $06
-@Dice_addr_1	!byte $C4, $06
-@Dice_addr_2	!byte $D4, $06
-@Dice_addr_3	!byte $E4, $06
-@Dice_addr_4	!byte $F4, $06
-@Dice_addr_5	!byte $04, $07
-@Dice_addr_6	!byte $14, $07
-@Dice_addr_7	!byte $24, $07
+@Dice_addr_0	!byte $C0, $06
+@Dice_addr_1	!byte $D0, $06
+@Dice_addr_2	!byte $E0, $06
+@Dice_addr_3	!byte $F0, $06
+@Dice_addr_4	!byte $00, $07
+@Dice_addr_5	!byte $10, $07
+@Dice_addr_6	!byte $20, $07
+@Dice_addr_7	!byte $30, $07
 ;************************************************************************
 ;Presenting players with text to press space to stop dice from rolling
 ;************************************************************************
@@ -563,7 +563,7 @@ Load_sprites:
 	jsr SETNAM
 
 	ldy #$D6		;Sprite is 4 bpp 8x8 = 32 bytes = $20
-	ldx #$20		;Start should be $D600+$20 = $D620
+	ldx #$80		;Start should be $D600+$20 = $D620
 	lda #$02
 
 	jmp @Load
@@ -575,8 +575,8 @@ Load_sprites:
 	ldy #>@Purple_file
 	jsr SETNAM
 
-	ldy #$D6
-	ldx #$40
+	ldy #$D7
+	ldx #$00
 	lda #$02
 
 	jmp @Load
@@ -588,8 +588,8 @@ Load_sprites:
 	ldy #>@Yellow_file
 	jsr SETNAM
 
-	ldy #$D6
-	ldx #$60
+	ldy #$D7
+	ldx #$80
 	lda #$02
 
 	jmp @Load
@@ -601,8 +601,8 @@ Load_sprites:
 	ldy #>@Dice_file
 	jsr SETNAM
 
-	ldy #$D6
-	ldx #$80
+	ldy #$D8
+	ldx #$00
 	lda #$02
 
 @Load	jsr LOAD
@@ -719,6 +719,6 @@ Load2vram:
 ;************************************************************************
 Rndnum !byte 0
 Pcs_addr_0 !byte $B0, $06
-Pcs_addr_1 !byte $B1, $06
-Pcs_addr_2 !byte $B2, $06
-Pcs_addr_3 !byte $B3, $06
+Pcs_addr_1 !byte $B4, $06
+Pcs_addr_2 !byte $B8, $06
+Pcs_addr_3 !byte $BC, $06
