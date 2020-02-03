@@ -264,6 +264,7 @@ Gameloop:
 @Pick	inc Rndnum
 	lda Rndnum
 	and #$0F
+	sta DICE
 	cmp #7
 	bcs @Pick
 	lda #$08
@@ -272,8 +273,7 @@ Gameloop:
 	sta VERA_ADDR_HIGH
 	lda #$1F
 	sta VERA_ADDR_BANK
-	lda Rndnum
-	and #$0F
+	lda DICE
 	cmp #1
 	bne @Is_2
 	lda @Dice_addr_2
@@ -339,7 +339,7 @@ Throw_dice:
 
 	lda CURRENT_PLYER
 	bne @Plyer_2
-	lda #$30
+	lda #$E0
 	sta COLPORT
 	ldx #<@P1
 	ldy #>@P1
@@ -349,7 +349,7 @@ Throw_dice:
 @Plyer_2:
 	cmp #1
 	bne @Plyer_3
-	lda #$E0
+	lda #$50
 	sta COLPORT
 	ldx #<@P2
 	ldy #>@P2
@@ -359,7 +359,7 @@ Throw_dice:
 @Plyer_3
 	cmp #2
 	bne @Plyer_4
-	lda #$50
+	lda #$40
 	sta COLPORT
 	ldx #<@P3
 	ldy #>@P3
