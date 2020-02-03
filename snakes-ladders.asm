@@ -90,8 +90,12 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #%00000000
 	sta VERA_DATA0
+	lda PLAYERS
+	cmp #3
+	bcs +
+	jmp @End
 
-	lda Pcs_addr_2		;Enabling Purple piece
++	lda Pcs_addr_2		;Enabling Purple piece
 	sta VERA_DATA0
 	lda Pcs_addr_2+1
 	sta VERA_DATA0
@@ -107,8 +111,12 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #0
 	sta VERA_DATA0
+	lda PLAYERS
+	cmp #4
+	bcs +
+	jmp @End
 
-	lda Pcs_addr_3		;Enabling Yellow piece
++	lda Pcs_addr_3		;Enabling Yellow piece
 	sta VERA_DATA0
 	lda Pcs_addr_3+1
 	sta VERA_DATA0
@@ -125,7 +133,7 @@ Show_pieces:
 	lda #0
 	sta VERA_DATA0
 
-	rts
+@End:	rts
 
 
 
