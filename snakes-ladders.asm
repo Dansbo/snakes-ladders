@@ -65,7 +65,7 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #0
 	sta VERA_DATA0
-	lda #225
+	lda #223
 	sta VERA_DATA0
 	lda #0
 	sta VERA_DATA0
@@ -82,7 +82,7 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #1
 	sta VERA_DATA0
-	lda #225
+	lda #223
 	sta VERA_DATA0
 	lda #0
 	sta VERA_DATA0
@@ -103,7 +103,7 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #1
 	sta VERA_DATA0
-	lda #225
+	lda #223
 	sta VERA_DATA0
 	lda #0
 	sta VERA_DATA0
@@ -124,7 +124,7 @@ Show_pieces:
 	sta VERA_DATA0
 	lda #1
 	sta VERA_DATA0
-	lda #225
+	lda #223
 	sta VERA_DATA0
 	lda #0
 	sta VERA_DATA0
