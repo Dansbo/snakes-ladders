@@ -47,9 +47,47 @@ DICE		= $05
 	jsr Throw_dice
 	jsr Show_pieces
 	jsr Gameloop
+	jsr Move
 
 	rts			;end program
 
+Move:	!byte $FF
+	ldx @Pcs_addr_hi	;First we need to know where the piece
+	stx VERA_ADDR_HIGH	;is located
+	ldx @Lightblue_addr	;We change the VERA address to the relevant
+	stx VERA_ADDR_LOW	;Position and increment with 2
+	lda #$2F		;each time we read VERA_DATA0
+	sta VERA_ADDR_BANK	;as we do not need upper bytes at the moment
+	lda VERA_DATA0
+	sta @Xpos		;Horizontal position is stored in @Xpos
+	lda VERA_DATA0
+	sta @Ypos		;Vertical position is stored in @Ypos
+
+@Step	lda @Pcs_addr_hi	;Now I want to move lightblue to tile 1
+	sta VERA_ADDR_HIGH	;VERA High is $50
+	lda @Lightblue_addr	;Lightblue's Xpos is located at $12
+	sta VERA_ADDR_HIGH	;=$5012
+	lda #$1F		;Increment 1, Bank $F
+	sta VERA_ADDR_BANK
+	dec @Xpos		;Decrement Xpos with 1 pixel
+	lda @Xpos		;Load new Xpos into register A
+	sta VERA_DATA0		;Send to VERA
+	cmp #4			;Is X position #$04 which is center of tile 1
+	bne @Step		;If not then move another pixel
+
+
+
+	rts
+@Lightblue_addr 	!byte $12
+@Lightgreen_addr 	!byte $1A
+@Purple_addr		!byte $22
+@Yellow_addr		!byte $2A
+@Pcs_addr_hi		!byte $50
+@Xpos			!byte $00
+@Ypos			!byte $00
+;************************************************************************
+;Routine that enable all gamepieces at starting position
+;************************************************************************
 Show_pieces:
 	lda #$50		;Enabling lightblue piece
 	sta VERA_ADDR_HIGH
