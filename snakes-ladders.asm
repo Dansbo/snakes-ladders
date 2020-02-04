@@ -51,8 +51,7 @@ DICE		= $05
 
 	rts			;end program
 
-Move:	!byte $FF
-	ldx @Pcs_addr_hi	;First we need to know where the piece
+Move:	ldx @Pcs_addr_hi	;First we need to know where the piece
 	stx VERA_ADDR_HIGH	;is located
 	ldx @Lightblue_addr	;We change the VERA address to the relevant
 	stx VERA_ADDR_LOW	;Position and increment with 2
@@ -308,6 +307,7 @@ Gameloop:
 	sta DICE
 	cmp #7
 	bcs @Pick
+	beq @Pick
 	lda #$08
 	sta VERA_ADDR_LOW
 	lda #$50
