@@ -62,7 +62,7 @@ Move:	ldx @Pcs_addr_hi	;First we need to know where the piece
 	lda VERA_DATA0
 	sta @Ypos		;Vertical position is stored in @Ypos
 
-@Step	lda #1
+@Start	lda #1
 	sta TMP1
 	jsr Delay
 	lda @Pcs_addr_hi	;Now I want to move lightblue to tile 1
@@ -75,11 +75,47 @@ Move:	ldx @Pcs_addr_hi	;First we need to know where the piece
 	lda @Xpos		;Load new Xpos into register A
 	sta VERA_DATA0		;Send to VERA
 	cmp #4			;Is X position #$04 which is center of tile 1
-	bne @Step		;If not then move another pixel
+	bne @Start		;If not then move another pixel
+	lda VERA_DATA0		;Load upper byte of Xpos
+	beq +			;If 0 then continue
+	inc @Lightblue_addr
+	lda @Lightblue_addr	;Change VERA_ADDR_LOW to upper byte of Xpos
+	sta VERA_ADDR_LOW
+	dec @Lightblue_addr	;Change addess back
+	lda #0
+	sta VERA_DATA0		;Change upper byte of Xpos to 0
+	jmp @Start
++	dec DICE		;We need to not move the first tile first time
+
+@Dice	lda #0
+	sta TMP2
+	lda DICE
+	beq @End
+@Right	inc TMP2
+	lda @Lightblue_addr
+	sta VERA_ADDR_LOW
+	inc @Xpos
+	lda @Xpos
+	sta VERA_DATA0
+	lda #1
+	sta TMP1
+	jsr Delay
+	lda TMP2
+	cmp #24
+	bne @Right
+	lda #30
+	sta TMP1
+	jsr Delay
+	dec DICE
+	jmp @Dice
 
 
 
-	rts
+
+
+
+
+@End	rts
 @Lightblue_addr 	!byte $12
 @Lightgreen_addr 	!byte $1A
 @Purple_addr		!byte $22
@@ -87,6 +123,11 @@ Move:	ldx @Pcs_addr_hi	;First we need to know where the piece
 @Pcs_addr_hi		!byte $50
 @Xpos			!byte $00
 @Ypos			!byte $00
+@Lightblue_row		!byte $00
+@Lightgreen_row		!byte $00
+@Purple_row		!byte $00
+@Yellow_row		!byte $00
+
 ;************************************************************************
 ;Routine that enable all gamepieces at starting position
 ;************************************************************************
@@ -101,9 +142,9 @@ Show_pieces:
 	sta VERA_DATA0
 	lda Pcs_addr_0+1
 	sta VERA_DATA0
-	lda #250
+	lda #42
 	sta VERA_DATA0
-	lda #0
+	lda #1
 	sta VERA_DATA0
 	lda #220
 	sta VERA_DATA0
@@ -305,6 +346,7 @@ Gameloop:
 	lda Rndnum
 	and #$0F
 	sta DICE
+	beq @Pick
 	cmp #7
 	bcs @Pick
 	beq @Pick
