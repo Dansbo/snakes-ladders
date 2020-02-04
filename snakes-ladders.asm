@@ -63,10 +63,13 @@ Move:	!byte $FF
 	lda VERA_DATA0
 	sta @Ypos		;Vertical position is stored in @Ypos
 
-@Step	lda @Pcs_addr_hi	;Now I want to move lightblue to tile 1
+@Step	lda #1
+	sta TMP1
+	jsr Delay
+	lda @Pcs_addr_hi	;Now I want to move lightblue to tile 1
 	sta VERA_ADDR_HIGH	;VERA High is $50
 	lda @Lightblue_addr	;Lightblue's Xpos is located at $12
-	sta VERA_ADDR_HIGH	;=$5012
+	sta VERA_ADDR_LOW	;=$5012
 	lda #$1F		;Increment 1, Bank $F
 	sta VERA_ADDR_BANK
 	dec @Xpos		;Decrement Xpos with 1 pixel
