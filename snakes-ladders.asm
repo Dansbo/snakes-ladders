@@ -47,14 +47,35 @@ DICE		= $05
 	jsr Throw_dice
 	jsr Show_pieces
 	jsr Gameloop
-	jsr Move
 
 	rts			;end program
 
-Move:	ldx @Pcs_addr_hi	;First we need to know where the piece
-	stx VERA_ADDR_HIGH	;is located
-	ldx @Lightblue_addr	;We change the VERA address to the relevant
-	stx VERA_ADDR_LOW	;Position and increment with 2
+Move:	lda @Pcs_addr_hi	;First we need to know where the piece
+	sta VERA_ADDR_HIGH	;is located
+	lda CURRENT_PLYER
+	bne @Lightgreen
+	lda @Lightblue_addr	;We change the VERA address to the relevant
+	sta TMP2
+	jmp @Next
+
+@Lightgreen
+	cmp #1
+	bne @Purple
+	lda @Lightgreen_addr
+	sta TMP2
+	jmp @Next
+
+@Purple	cmp #2
+	bne @Yellow
+	lda @Purple_addr
+	sta TMP2
+	jmp @Next
+
+@Yellow	lda @Yellow_addr
+	sta TMP2
+
+@Next	lda TMP2
+	sta VERA_ADDR_LOW	;Position and increment with 2
 	lda #$2F		;each time we read VERA_DATA0
 	sta VERA_ADDR_BANK	;as we do not need upper bytes at the moment
 	lda VERA_DATA0
@@ -62,51 +83,63 @@ Move:	ldx @Pcs_addr_hi	;First we need to know where the piece
 	lda VERA_DATA0
 	sta @Ypos		;Vertical position is stored in @Ypos
 
+	lda @Pcs_addr_hi	;Now I want to move lightblue to tile 1
+	sta VERA_ADDR_HIGH	;VERA High is $50
+	lda TMP2		;gamepiece's Xpos is located at $12
+	sta VERA_ADDR_LOW	;=$5012
+	lda #$0F		;Increment 0, Bank $F
+	sta VERA_ADDR_BANK
 @Start	lda #1
 	sta TMP1
 	jsr Delay
-	lda @Pcs_addr_hi	;Now I want to move lightblue to tile 1
-	sta VERA_ADDR_HIGH	;VERA High is $50
-	lda @Lightblue_addr	;Lightblue's Xpos is located at $12
-	sta VERA_ADDR_LOW	;=$5012
-	lda #$1F		;Increment 1, Bank $F
-	sta VERA_ADDR_BANK
 	dec @Xpos		;Decrement Xpos with 1 pixel
 	lda @Xpos		;Load new Xpos into register A
 	sta VERA_DATA0		;Send to VERA
 	cmp #4			;Is X position #$04 which is center of tile 1
 	bne @Start		;If not then move another pixel
+	inc TMP2		;We need to know if the upper byte is 0
+	lda TMP2		;If not we end up placing the piece in the
+	sta VERA_ADDR_LOW	;wrong place
 	lda VERA_DATA0		;Load upper byte of Xpos
 	beq +			;If 0 then continue
-	inc @Lightblue_addr
-	lda @Lightblue_addr	;Change VERA_ADDR_LOW to upper byte of Xpos
+	dec TMP2
+	lda TMP2
 	sta VERA_ADDR_LOW
-	dec @Lightblue_addr	;Change addess back
+@Remain	lda #1			;We need another loop to take care of moving
+	sta TMP1		;the gamme piece the last 3 pixels
+	jsr Delay		;So it doesn't jump around but moves slowly
+	dec @Xpos		;towards it's start position
+	lda @Xpos
+	sta VERA_DATA0
+	bne @Remain		;When Xpos reaches 0 then decrement upper byte
+	inc TMP2		;of Horizontal position
+	lda TMP2		;Change VERA_ADDR_LOW to upper byte of Xpos
+	sta VERA_ADDR_LOW	;to 0
+	dec TMP2		;Change addess back
 	lda #0
 	sta VERA_DATA0		;Change upper byte of Xpos to 0
 	jmp @Start
-+	dec DICE		;We need to not move the first tile first time
++	dec TMP2
+	dec DICE		;We need to not move the first tile first time
 
-@Dice	lda #0
-	sta TMP2
-	lda DICE
+@Dice	ldx #0			;Reset X
+	lda DICE		;How many eyes on the dice left?
 	beq @End
-@Right	inc TMP2
-	lda @Lightblue_addr
-	sta VERA_ADDR_LOW
-	inc @Xpos
-	lda @Xpos
-	sta VERA_DATA0
-	lda #1
-	sta TMP1
-	jsr Delay
 	lda TMP2
-	cmp #24
-	bne @Right
-	lda #30
-	sta TMP1
+	sta VERA_ADDR_LOW
+@Right	inx
+	inc @Xpos		;Increment @Xpos
+	lda @Xpos		;So gamepiece can move 1 pixel right
+	sta VERA_DATA0
+	lda #1			;Delay with one Jiffy
+	sta TMP1		;Before moving on to next pixel
 	jsr Delay
-	dec DICE
+	cpx #24			;1 tile is 24 pixels wide
+	bne @Right
+	lda #30			;Delay with half a second
+	sta TMP1		;when center of new tile is reached
+	jsr Delay
+	dec DICE		;We moved for one of the eyes how many left?
 	jmp @Dice
 
 
@@ -403,7 +436,18 @@ Gameloop:
 	sta VERA_DATA0
 
 
-@End	rts
+@End	jsr Move
+	inc CURRENT_PLYER
+	lda CURRENT_PLYER
+	cmp #4
+	beq +
+	jsr Throw_dice
+	jmp Gameloop
++	lda #0
+	sta CURRENT_PLYER
+	jsr Throw_dice
+	jmp Gameloop
+	rts
 @Dice_addr_0	!byte $C0, $06
 @Dice_addr_1	!byte $D0, $06
 @Dice_addr_2	!byte $E0, $06
