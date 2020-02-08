@@ -118,6 +118,8 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	dec TMP2		;Change addess back
 	lda #0
 	sta VERA_DATA0		;Change upper byte of Xpos to 0
+	lda TMP2
+	sta VERA_ADDR_LOW
 	jmp @Start
 +	dec TMP2
 	dec DICE		;We need to not move the first tile first time
