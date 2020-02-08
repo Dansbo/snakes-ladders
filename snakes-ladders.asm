@@ -34,6 +34,7 @@ TMP2		= $02
 PLAYERS		= $03
 CURRENT_PLYER	= $04
 DICE		= $05
+FIRST_THROW	= $06
 
 	jsr Reset
 	jsr Load2vram
@@ -89,6 +90,8 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	sta VERA_ADDR_LOW	;=$5012
 	lda #$0F		;Increment 0, Bank $F
 	sta VERA_ADDR_BANK
+	lda FIRST_THROW
+	bne @Dice
 @Start	lda #1
 	sta TMP1
 	jsr Delay
@@ -447,6 +450,8 @@ Gameloop:
 	jmp Gameloop
 +	lda #0
 	sta CURRENT_PLYER
+	lda #1
+	sta FIRST_THROW
 	jsr Throw_dice
 	jmp Gameloop
 	rts
@@ -762,6 +767,7 @@ Reset:
 	sta PIC
 	sta PLAYERS
 	sta CURRENT_PLYER
+	sta FIRST_THROW
 	ldx #$0E
 	stx VERA_ADDR_LOW
 	ldx #$50
