@@ -90,7 +90,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	sta VERA_ADDR_LOW	;=$5012
 	lda #$0F		;Increment 0, Bank $F
 	sta VERA_ADDR_BANK
-	lda FIRST_THROW
+	lda FIRST_THROW		;Only move to tile 1 at first throw
 	bne @Dice
 @Start	lda #1
 	sta TMP1
