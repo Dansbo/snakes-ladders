@@ -472,7 +472,7 @@ Gameloop:
 @End	jsr Move
 	inc CURRENT_PLYER
 	lda CURRENT_PLYER
-	cmp #4
+	cmp PLAYERS
 	beq +
 	jsr Throw_dice
 	jmp Gameloop
@@ -580,7 +580,8 @@ Player_choice:
 	jsr GETIN
 	cmp #'1'
 	bne @Is_2
-	inc PLAYERS
+	lda #2
+	sta PLAYERS
 	jmp @End
 
 @Is_2	cmp #'2'
