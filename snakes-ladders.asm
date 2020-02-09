@@ -381,11 +381,8 @@ Gameloop:
 @Pick	inc Rndnum
 	lda Rndnum
 	and #$0F
+	beq @Pick
 	sta DICE
-	beq @Pick
-	cmp #7
-	bcs @Pick
-	beq @Pick
 	lda #$08
 	sta VERA_ADDR_LOW
 	lda #$50
@@ -394,49 +391,82 @@ Gameloop:
 	sta VERA_ADDR_BANK
 	lda DICE
 	cmp #1
+	beq @No_1
+	cmp #7
+	beq @No_1
+	cmp #13
 	bne @Is_2
-	lda @Dice_addr_2
+
+@No_1	lda @Dice_addr_2
 	sta VERA_DATA0
 	lda @Dice_addr_2+1
 	sta VERA_DATA0
+	lda #1
+	sta DICE
 	jmp @End
 
 @Is_2	cmp #2
+	beq @No_2
+	cmp #8
 	bne @Is_3
-	lda @Dice_addr_3
+
+@No_2	lda @Dice_addr_3
 	sta VERA_DATA0
 	lda @Dice_addr_3+1
 	sta VERA_DATA0
+	lda #2
+	sta DICE
 	jmp @End
 
 @Is_3	cmp #3
+	beq @No_3
+	cmp #9
+	beq @No_3
+	cmp #14
 	bne @Is_4
-	lda @Dice_addr_4
+
+@No_3	lda @Dice_addr_4
 	sta VERA_DATA0
 	lda @Dice_addr_4+1
 	sta VERA_DATA0
+	lda #3
+	sta DICE
 	jmp @End
 
 @Is_4	cmp #4
+	beq @No_4
+	cmp #10
 	bne @Is_5
-	lda @Dice_addr_5
+
+@No_4	lda @Dice_addr_5
 	sta VERA_DATA0
 	lda @Dice_addr_5+1
 	sta VERA_DATA0
+	lda #4
+	sta DICE
 	jmp @End
 
 @Is_5	cmp #5
+	beq @No_5
+	cmp #11
+	beq @No_5
+	cmp #15
 	bne @Is_6
-	lda @Dice_addr_6
+
+@No_5	lda @Dice_addr_6
 	sta VERA_DATA0
 	lda @Dice_addr_6+1
 	sta VERA_DATA0
+	lda #5
+	sta DICE
 	jmp @End
 
 @Is_6	lda @Dice_addr_7
 	sta VERA_DATA0
 	lda @Dice_addr_7+1
 	sta VERA_DATA0
+	lda #6
+	sta DICE
 
 
 @End	jsr Move
