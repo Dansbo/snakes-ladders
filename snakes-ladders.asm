@@ -132,6 +132,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	beq @End
 	lda TMP2
 	sta VERA_ADDR_LOW
+
 @Right	inx
 	inc @Xpos		;Increment @Xpos
 	lda @Xpos		;So gamepiece can move 1 pixel right
@@ -146,9 +147,6 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	jsr Delay
 	dec DICE		;We moved for one of the eyes how many left?
 	jmp @Dice
-
-
-
 
 
 
