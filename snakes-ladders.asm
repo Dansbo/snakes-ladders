@@ -130,7 +130,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 @Dice	ldx #0			;Reset X
 	lda DICE		;How many eyes on the dice left?
 	bne +
-	jmp @End
+	jmp @Ladder
 +	lda TMP2
 	sta VERA_ADDR_LOW
 	lda @Ypos
@@ -205,7 +205,56 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 
 
 
+@Ladder ldy @Ypos
+	ldx @Xpos
+	cpy #220
+	bne +
+	cpx #76
+	beq @Ladder0
+	cpx #220
+	beq @Ladder1
+
++	cpy #196
+	bne +
+	cpx #148
+	beq @Ladder2
+
++	cpy #148
+	bne +
+	cpx #172
+	beq @Ladder3
+
++	cpy #76
+	bne +
+	cpx #76
+	beq @Ladder4
+
++	cpy #52
+	bne @End
+	cpx #148
+	beq @Ladder5
+
+@Ladder0
+	jmp @End
+
+@Ladder1
+	jmp @End
+
+@Ladder2
+	jmp @End
+
+@Ladder3
+	jmp @End
+
+@Ladder4
+	jmp @End
+
+@Ladder5
+	jmp @End
+
+
 @End	rts
+
 @Lightblue_addr 	!byte $12
 @Lightgreen_addr 	!byte $1A
 @Purple_addr		!byte $22
