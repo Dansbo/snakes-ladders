@@ -132,6 +132,9 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	beq @End
 	lda TMP2
 	sta VERA_ADDR_LOW
+	lda @Xpos
+	cmp #220
+	beq @Up
 
 @Right	inx
 	inc @Xpos		;Increment @Xpos
@@ -148,6 +151,26 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	dec DICE		;We moved for one of the eyes how many left?
 	jmp @Dice
 
+@Up	inc TMP2
+	inc TMP2
+	lda TMP2
+	sta VERA_ADDR_LOW
+@Dirup	inx
+	dec @Ypos
+	lda @Ypos
+	sta VERA_DATA0
+	lda #1
+	sta TMP1
+	jsr Delay
+	cpx #24
+	bne @Dirup
+	lda #30
+	sta TMP1
+	jsr Delay
+	dec DICE
+	dec TMP2
+	dec TMP2
+	jmp @Dice
 
 
 
