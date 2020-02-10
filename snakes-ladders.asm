@@ -213,10 +213,6 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 @Pcs_addr_hi		!byte $50
 @Xpos			!byte $00
 @Ypos			!byte $00
-@Lightblue_row		!byte $00
-@Lightgreen_row		!byte $00
-@Purple_row		!byte $00
-@Yellow_row		!byte $00
 
 ;************************************************************************
 ;Routine that enable all gamepieces at starting position
