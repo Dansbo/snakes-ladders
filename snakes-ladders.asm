@@ -129,14 +129,27 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 
 @Dice	ldx #0			;Reset X
 	lda DICE		;How many eyes on the dice left?
-	beq @End
-	lda TMP2
+	bne +
+	jmp @End
++	lda TMP2
 	sta VERA_ADDR_LOW
-	lda @Xpos
+	lda @Ypos
+	cmp #196
+	beq @Left
+	cmp #148
+	beq @Left
+	cmp #100
+	beq @Left
+	cmp #52
+	beq @Left
+	cmp #4
+	beq @Left
+
+
+@Right	lda @Xpos
 	cmp #220
 	beq @Up
-
-@Right	inx
+	inx
 	inc @Xpos		;Increment @Xpos
 	lda @Xpos		;So gamepiece can move 1 pixel right
 	sta VERA_DATA0
@@ -149,6 +162,24 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	sta TMP1		;when center of new tile is reached
 	jsr Delay
 	dec DICE		;We moved for one of the eyes how many left?
+	jmp @Dice
+
+@Left	lda @Xpos
+	cmp #4
+	beq @Up
+	inx
+	dec @Xpos
+	lda @Xpos
+	sta VERA_DATA0
+	lda #1
+	sta TMP1
+	jsr Delay
+	cpx #24
+	bne @Left
+	lda #30
+	sta TMP1
+	jsr Delay
+	dec DICE
 	jmp @Dice
 
 @Up	inc TMP2
