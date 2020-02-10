@@ -379,30 +379,30 @@ Gameloop:
 +	jmp Gameloop
 
 @Pick	inc Rndnum
-	lda Rndnum
-	and #$0F
-	beq @Pick
-	sta DICE
+	lda Rndnum		;Load Rndnum
+	and #$0F		;Make Rndnum between 0-15
+	beq @Pick		;If 0 then pick another number
+	sta DICE		;Store in DICE
 	lda #$08
 	sta VERA_ADDR_LOW
 	lda #$50
 	sta VERA_ADDR_HIGH
 	lda #$1F
 	sta VERA_ADDR_BANK
-	lda DICE
-	cmp #1
+	lda DICE		;If DICE is 1, 7 or 13 then interpret
+	cmp #1			;as if dice landed on 1
 	beq @No_1
 	cmp #7
 	beq @No_1
 	cmp #13
 	bne @Is_2
 
-@No_1	lda @Dice_addr_2
+@No_1	lda @Dice_addr_2	;Show dice landing on 1
 	sta VERA_DATA0
 	lda @Dice_addr_2+1
 	sta VERA_DATA0
-	lda #1
-	sta DICE
+	lda #1			;Overwrite DICE so that gamepieces only move
+	sta DICE		;according to what the dice "landed" on
 	jmp @End
 
 @Is_2	cmp #2
@@ -469,19 +469,19 @@ Gameloop:
 	sta DICE
 
 
-@End	jsr Move
-	inc CURRENT_PLYER
+@End	jsr Move			;Go move the pieces
+	inc CURRENT_PLYER		;Next player to throw dice
 	lda CURRENT_PLYER
-	cmp PLAYERS
-	beq +
-	jsr Throw_dice
-	jmp Gameloop
-+	lda #0
-	sta CURRENT_PLYER
+	cmp PLAYERS			;Make sure not to wait for players
+	beq +				;That are playing
+	jsr Throw_dice			;Display text to throw dice
+	jmp Gameloop			;Redo gameloop
++	lda #0				;If CURRENT_PLYER equals PLAYERS
+	sta CURRENT_PLYER		;Then go back to 1st player
 	lda #1
-	sta FIRST_THROW
-	jsr Throw_dice
-	jmp Gameloop
+	sta FIRST_THROW			;Store 1 in FIRST_THROW so we do not
+	jsr Throw_dice			;move gamepieces back to tile 1
+	jmp Gameloop			;every time
 	rts
 @Dice_addr_0	!byte $C0, $06
 @Dice_addr_1	!byte $D0, $06
