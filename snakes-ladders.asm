@@ -205,7 +205,9 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 
 
 
-@Ladder ldy @Ypos
+@Ladder lda #$2F
+	sta VERA_ADDR_BANK
+	ldy @Ypos
 	ldx @Xpos
 	cpy #220
 	bne +
@@ -235,11 +237,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	beq @Ladder5
 
 @Ladder0
-	ldx #76
-	ldy #220
-	lda #$2F
-	sta VERA_ADDR_BANK
-@Lad0	lda #1
+	lda #1
 	sta TMP1
 	jsr Delay
 	lda TMP2
@@ -249,10 +247,22 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	stx VERA_DATA0
 	sty VERA_DATA0
 	cpx #28
-	bne @Lad0
+	bne @Ladder0
 	jmp @End
 
 @Ladder1
+	lda #1
+	sta TMP1
+	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	dex
+	dey
+	dey
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #196
+	bne @Ladder1
 	jmp @End
 
 @Ladder2
