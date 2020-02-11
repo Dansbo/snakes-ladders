@@ -109,7 +109,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	lda TMP2
 	sta VERA_ADDR_LOW
 @Remain	lda #1			;We need another loop to take care of moving
-	sta TMP1		;the gamme piece the last 3 pixels
+	sta TMP1		;the game piece the last 3 pixels
 	jsr Delay		;So it doesn't jump around but moves slowly
 	dec @Xpos		;towards it's start position
 	lda @Xpos
