@@ -95,7 +95,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 @Start	lda #1
 	sta TMP1
 	jsr Delay
-	dec @Xpos		;Decrement Xpos with 1 pixel
+@Hi_0	dec @Xpos		;Decrement Xpos with 1 pixel
 	lda @Xpos		;Load new Xpos into register A
 	sta VERA_DATA0		;Send to VERA
 	cmp #4			;Is X position #$04 which is center of tile 1
@@ -123,7 +123,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	sta VERA_DATA0		;Change upper byte of Xpos to 0
 	lda TMP2
 	sta VERA_ADDR_LOW
-	jmp @Start
+	jmp @Hi_0
 +	dec TMP2
 	dec DICE		;We need to not move the first tile first time
 
@@ -235,6 +235,21 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	beq @Ladder5
 
 @Ladder0
+	ldx #76
+	ldy #220
+	lda #$2F
+	sta VERA_ADDR_BANK
+@Lad0	lda #1
+	sta TMP1
+	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	dex
+	dey
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #28
+	bne @Lad0
 	jmp @End
 
 @Ladder1
