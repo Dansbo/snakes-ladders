@@ -129,11 +129,27 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 
 @Dice	ldx #0			;Reset X
 	lda DICE		;How many eyes on the dice left?
-	beq @End
-	lda TMP2
+	bne +
+	jmp @Ladder
++	lda TMP2
 	sta VERA_ADDR_LOW
+	lda @Ypos
+	cmp #196
+	beq @Left
+	cmp #148
+	beq @Left
+	cmp #100
+	beq @Left
+	cmp #52
+	beq @Left
+	cmp #4
+	beq @Left
 
-@Right	inx
+
+@Right	lda @Xpos
+	cmp #220
+	beq @Up
+	inx
 	inc @Xpos		;Increment @Xpos
 	lda @Xpos		;So gamepiece can move 1 pixel right
 	sta VERA_DATA0
@@ -148,10 +164,97 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	dec DICE		;We moved for one of the eyes how many left?
 	jmp @Dice
 
+@Left	lda @Xpos
+	cmp #4
+	beq @Up
+	inx
+	dec @Xpos
+	lda @Xpos
+	sta VERA_DATA0
+	lda #1
+	sta TMP1
+	jsr Delay
+	cpx #24
+	bne @Left
+	lda #30
+	sta TMP1
+	jsr Delay
+	dec DICE
+	jmp @Dice
 
+@Up	inc TMP2
+	inc TMP2
+	lda TMP2
+	sta VERA_ADDR_LOW
+@Dirup	inx
+	dec @Ypos
+	lda @Ypos
+	sta VERA_DATA0
+	lda #1
+	sta TMP1
+	jsr Delay
+	cpx #24
+	bne @Dirup
+	lda #30
+	sta TMP1
+	jsr Delay
+	dec DICE
+	dec TMP2
+	dec TMP2
+	jmp @Dice
+
+
+
+@Ladder ldy @Ypos
+	ldx @Xpos
+	cpy #220
+	bne +
+	cpx #76
+	beq @Ladder0
+	cpx #220
+	beq @Ladder1
+
++	cpy #196
+	bne +
+	cpx #148
+	beq @Ladder2
+
++	cpy #148
+	bne +
+	cpx #172
+	beq @Ladder3
+
++	cpy #76
+	bne +
+	cpx #76
+	beq @Ladder4
+
++	cpy #52
+	bne @End
+	cpx #148
+	beq @Ladder5
+
+@Ladder0
+	jmp @End
+
+@Ladder1
+	jmp @End
+
+@Ladder2
+	jmp @End
+
+@Ladder3
+	jmp @End
+
+@Ladder4
+	jmp @End
+
+@Ladder5
+	jmp @End
 
 
 @End	rts
+
 @Lightblue_addr 	!byte $12
 @Lightgreen_addr 	!byte $1A
 @Purple_addr		!byte $22
@@ -159,10 +262,6 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 @Pcs_addr_hi		!byte $50
 @Xpos			!byte $00
 @Ypos			!byte $00
-@Lightblue_row		!byte $00
-@Lightgreen_row		!byte $00
-@Purple_row		!byte $00
-@Yellow_row		!byte $00
 
 ;************************************************************************
 ;Routine that enable all gamepieces at starting position
