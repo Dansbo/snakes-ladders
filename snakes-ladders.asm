@@ -130,7 +130,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 @Dice	ldx #0			;Reset X
 	lda DICE		;How many eyes on the dice left?
 	bne +
-	jmp @Ladder
+	jmp @Ladder		;If 0 then check if we landed on a ladder
 +	lda TMP2
 	sta VERA_ADDR_LOW
 	lda @Ypos
@@ -237,7 +237,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 +	cpx #148
 	bne +
 	jmp @Ladder5
-+	jmp @End
++	jmp @Snakes
 
 @Ladder0
 	lda #1
@@ -326,6 +326,124 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 	cpx #220
 	bne @Ladder5
 	jmp @End
+
+@Snakes	cpy #148
+	bne +
+	cpx #4
+	beq @Snake0
+
++	cpy #124
+	bne +
+	cpx #220
+	bne +
+	jmp @Snake1
+
++	cpy #28
+	bne +
+	cpx #4
+	bne +
+	jmp @Snake2
+
++	cpy #4
+	beq +
+	jmp @End
++	cpx #196
+	bne +
+	jmp @Snake3
+	cpx #124
+	bne +
+	jmp @Snake4
++	jmp @End
+
+@Snake0	lda #1
+	sta TMP1
+	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	inx
+	inx
+	dey
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #16
+	bne @Snake0
+@Snap1	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	inx
+	inx
+	iny
+	iny
+	iny
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #28
+	bne @Snap1
+@Snap2	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	inx
+	inx
+	dey
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #52
+	bne @Snap2
+@Snap3	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	inx
+	iny
+	iny
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #64
+	bne @Snap3
+@Snap4	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	dex
+	iny
+	iny
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #52
+	bne @Snap4
+@Snap5	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	dex
+	dex
+	dey
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #28
+	bne @Snap5
+@Snap6	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	dex
+	dey
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #16
+	bne @Snap6
+@Snap7	jsr Delay
+	lda TMP2
+	sta VERA_ADDR_LOW
+	dex
+	iny
+	iny
+	stx VERA_DATA0
+	sty VERA_DATA0
+	cpx #4
+	bne @Snap7
+	jmp @End
+
+@Snake1 jmp @End
+@Snake2 jmp @End
+@Snake3	jmp @End
+@Snake4 jmp @End
 
 
 @End	rts
