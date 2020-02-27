@@ -17,6 +17,7 @@ VERA_IEN	= VERA_BASE+6
 VERA_ISR	= VERA_BASE+7
 
 CHROUT		= $FFD2
+CHRIN		= $FFCF
 SETLFS		= $FFBA
 SETNAM		= $FFBD
 LOAD		= $FFD5
@@ -564,7 +565,17 @@ Gameloop:
 	inc Rndnum
 	jsr GETIN
 
-	cmp #' '
+;************************************************************************
+;Development press T to choose Number
+;************************************************************************
+	cmp #'T'
+	bne +
+	jsr CHRIN
+	and #$0F
+	sta DICE
+	jmp @End
+;************************************************************************
++	cmp #' '
 	bne +
 	jmp @Pick
 
