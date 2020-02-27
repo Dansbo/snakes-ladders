@@ -233,7 +233,7 @@ Move:	lda @Pcs_addr_hi	;First we need to know where the piece
 
 +	cpy #52
 	beq +
-	jmp @End
+	jmp @Snakes
 +	cpx #148
 	bne +
 	jmp @Ladder5
